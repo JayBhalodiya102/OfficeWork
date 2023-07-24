@@ -15,6 +15,9 @@
         public string? Address { get; set; }
 
         public long? Phoneno { get; set; }
+
         public int? OTP { get; set; }
+
+        
     }
 }

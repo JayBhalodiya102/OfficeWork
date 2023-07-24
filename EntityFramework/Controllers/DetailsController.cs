@@ -108,7 +108,6 @@ namespace EntityFramework.Controllers
             if (FindId != null)
             {
 
-                //SendEmail();
                 return Ok(FindId);
 
             }

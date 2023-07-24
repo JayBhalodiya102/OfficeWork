@@ -36,21 +36,32 @@ namespace EntityFramework.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Time = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Login", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Login_Details_DId",
+                        column: x => x.DId,
+                        principalTable: "Details",
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Login_DId",
+                table: "Login",
+                column: "DId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Details");
+                name: "Login");
 
             migrationBuilder.DropTable(
-                name: "Login");
+                name: "Details");
         }
     }
 }

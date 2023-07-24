@@ -7,5 +7,11 @@
         public string? Password { get; set; }
         public DateTime? Time { get; set; }
 
+        // Foreign key property
+        public int? DId { get; set; }
+
+        // Navigation property
+        public DetailsModel DM { get; set; }
+
     }
 }

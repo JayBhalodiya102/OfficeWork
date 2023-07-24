@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityFramework.Migrations
 {
     [DbContext(typeof(MyAPIDbContext))]
-    [Migration("20230724052944_1st Migration")]
+    [Migration("20230724115524_1st Migration")]
     partial class _1stMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,6 +66,9 @@ namespace EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"), 1L, 1);
 
+                    b.Property<int?>("DId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -77,7 +80,18 @@ namespace EntityFramework.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DId");
+
                     b.ToTable("Login");
+                });
+
+            modelBuilder.Entity("EntityFramework.Model.LoginModel", b =>
+                {
+                    b.HasOne("EntityFramework.Model.DetailsModel", "DM")
+                        .WithMany()
+                        .HasForeignKey("DId");
+
+                    b.Navigation("DM");
                 });
 #pragma warning restore 612, 618
         }

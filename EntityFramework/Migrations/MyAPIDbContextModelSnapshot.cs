@@ -64,6 +64,9 @@ namespace EntityFramework.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"), 1L, 1);
 
+                    b.Property<int?>("DId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -75,7 +78,18 @@ namespace EntityFramework.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DId");
+
                     b.ToTable("Login");
+                });
+
+            modelBuilder.Entity("EntityFramework.Model.LoginModel", b =>
+                {
+                    b.HasOne("EntityFramework.Model.DetailsModel", "DM")
+                        .WithMany()
+                        .HasForeignKey("DId");
+
+                    b.Navigation("DM");
                 });
 #pragma warning restore 612, 618
         }

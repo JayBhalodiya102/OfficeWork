@@ -46,7 +46,7 @@ namespace EntityFramework.Controllers
 
                     await _dbContext.Login.AddAsync(data);
                     await _dbContext.SaveChangesAsync();
-                    return Ok("Login Succesfully");
+                    return Ok("Login Succesfully => " + Email);
                 }
                 else
                 {

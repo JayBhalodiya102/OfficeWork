@@ -13,5 +13,14 @@ namespace EntityFramework.Data
         public DbSet<DetailsModel> Details { get; set; }
         public DbSet<LoginModel> Login { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Define the relationship between DetailsModel and LoginModel
+            modelBuilder.Entity<LoginModel>().HasOne(X => X.DM).WithMany().HasForeignKey(X=>X.DId);
+
+        }
+
     }
 }
