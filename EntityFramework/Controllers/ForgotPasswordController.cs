@@ -1,25 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EntityFramework.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static System.Net.WebRequestMethods;
 using System.Net.Mail;
 using System.Net;
-using EntityFramework.Data;
-using EntityFramework.Model;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityFramework.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmailController : ControllerBase
+    public class ForgotPasswordController : ControllerBase
     {
         private readonly MyAPIDbContext _dbContext;
-        private static string _GlobalSaltkey;
+        private static string _GlobalSaltKey;
         private static int _GlobalRandomNumber;
 
-        public EmailController(MyAPIDbContext dbContext)
+        public ForgotPasswordController(MyAPIDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -40,7 +38,6 @@ namespace EntityFramework.Controllers
                 {
                     GenerateOTP();
 
-                    Data.HashKey = _GlobalSaltkey;
                     Data.OTP = _GlobalRandomNumber;
 
                     await _dbContext.SaveChangesAsync();
@@ -66,6 +63,7 @@ namespace EntityFramework.Controllers
             if (Data != null)
             {
                 Data.Password = SaltKey(Password);
+                Data.HashKey = _GlobalSaltKey;
 
                 await _dbContext.SaveChangesAsync();
                 return Ok("Password Updated SuccessFully");
@@ -76,6 +74,32 @@ namespace EntityFramework.Controllers
             }
 
             return null;
+
+        }
+
+
+        [NonAction]
+        public static string SaltKey(string password)
+        {
+            byte[] salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            string Saltkey = Convert.ToBase64String(salt);
+
+            _GlobalSaltKey = Saltkey;
+
+            string PassHashKey = Saltkey + password;
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(PassHashKey));
+                string hashKey = Convert.ToBase64String(hashBytes);
+
+                return hashKey;
+            }
 
         }
 
@@ -117,30 +141,5 @@ namespace EntityFramework.Controllers
 
             return RandomNumber;
         }
-
-
-        [NonAction]
-        public static string SaltKey(string password)
-        {
-            byte[] salt = new byte[16];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            string Saltkey = Convert.ToBase64String(salt);
-
-            _GlobalSaltkey = Saltkey;
-            string PassHashKey = Saltkey + password;
-
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(PassHashKey));
-                string hashKey = Convert.ToBase64String(hashBytes);
-                return hashKey;
-            }
-
-        }
-
     }
 }

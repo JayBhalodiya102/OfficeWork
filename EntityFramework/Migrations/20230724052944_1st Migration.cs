@@ -20,7 +20,8 @@ namespace EntityFramework.Migrations
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HashKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phoneno = table.Column<long>(type: "bigint", nullable: true)
+                    Phoneno = table.Column<long>(type: "bigint", nullable: true),
+                    OTP = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,7 +36,7 @@ namespace EntityFramework.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Time = table.Column<DateTime>(type: "datetime", nullable: true)
+                    Time = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

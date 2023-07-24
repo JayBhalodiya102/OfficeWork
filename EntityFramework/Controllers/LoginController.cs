@@ -28,7 +28,7 @@ namespace EntityFramework.Controllers
             var checkEmail = await _dbContext.Details.FirstOrDefaultAsync(X => X.Email == Email);
             if (checkEmail != null)
             {
-                string Hashkey = (await _dbContext.Details.FirstOrDefaultAsync()).HashKey;
+                string Hashkey = checkEmail.HashKey;
 
                 var HasedPassword = SaltKey(Hashkey, Password);
 
@@ -37,11 +37,10 @@ namespace EntityFramework.Controllers
                 {
                     var CurrentTime = DateTime.UtcNow;
                     
-
                     var data = new LoginModel
                     {
                         Email = Email,
-                        Password = _GlobalHashKey,
+                        Password = HasedPassword,
                         Time = Convert.ToDateTime(CurrentTime)
                     };
 
